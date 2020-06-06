@@ -9,12 +9,11 @@ import {
   Alert,
   Image,
   ScrollView,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from "react-native";
 import { THEME } from "../theme";
 import { registration } from "../store/types";
-import {useDispatch, useSelector } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 
 export const Registration = ({ route, navigation }) => {
   const dispatch = useDispatch();
@@ -23,67 +22,77 @@ export const Registration = ({ route, navigation }) => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
   const pressHandllerr = () => {
-    if(!email && !passwordConfirm && !password){
-        Alert.alert("Поля не могут быть пустыми!");
-    }
-    else if(!email){
-        Alert.alert("Поле email может быть пустым!");
-    }else if(!password){
-        Alert.alert("Поле password может быть пустым!");
-    }else if(!passwordConfirm){
-        Alert.alert("Поле passConf может быть пустым!");
-    }else if(password!== passwordConfirm){
-        Alert.alert("Пароли не совпадают!");
-    }else{
-        Keyboard.dismiss();
-        const userData  = {
-          email: email,
-          password:password,
-          password_confirmation:passwordConfirm
-        };
-        setEmail("");
-        setPassword("");
-        setPasswordConfirm("");
-        dispatch(registration(userData));
+    if (!email && !passwordConfirm && !password) {
+      Alert.alert("Поля не могут быть пустыми!");
+    } else if (!email) {
+      Alert.alert("Поле email может быть пустым!");
+    } else if (!password) {
+      Alert.alert("Поле password может быть пустым!");
+    } else if (!passwordConfirm) {
+      Alert.alert("Поле passConf может быть пустым!");
+    } else if (password !== passwordConfirm) {
+      Alert.alert("Пароли не совпадают!");
+    } else {
+      Keyboard.dismiss();
+      const userData = {
+        email: email,
+        password: password,
+        password_confirmation: passwordConfirm,
+      };
+      setEmail("");
+      setPassword("");
+      setPasswordConfirm("");
+      dispatch(registration(userData));
     }
   };
 
-
   return (
     <ScrollView>
-      <TouchableWithoutFeedback onPress={()=>Keyboard.dismiss}>
-      <View style={styles.wrapper}>
-        <Text style={styles.title}>Регистрация</Text>
-        <TextInput
-          value={email}
-          placeholder={"email"}
-          onChangeText={setEmail}
-          style={styles.input}
-          autoCorrect={false}
-          autoCapitalize={"none"}
-          multilines
-        />
-        <TextInput
-          value={password}
-          placeholder={"password"}
-          onChangeText={setPassword}
-          style={styles.input}
-          autoCorrect={false}
-          autoCapitalize={"none"}
-          multilines
-        />
-         <TextInput
-          value={passwordConfirm}
-          placeholder={"password confirm"}
-          onChangeText={setPasswordConfirm}
-          style={styles.input}
-          autoCorrect={false}
-          autoCapitalize={"none"}
-          multilines
-        />
-        <Button style={styles.button} onPress={pressHandllerr} title={'Зарегистрироваться'} />
-           <Button style={styles.button} onPress={()=>navigation.navigate("Auth")}  title={'Назад'} />
-      </View>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
+        <View style={styles.wrapper}>
+          <View style={styles.titleWrapper}>
+          <Text style={styles.title}>Регистрация</Text>
+          </View>
+          <TextInput
+            value={email}
+            placeholder={"email"}
+            onChangeText={setEmail}
+            style={styles.input}
+            autoCorrect={false}
+            autoCapitalize={"none"}
+            multilines
+          />
+          <TextInput
+            value={password}
+            placeholder={"password"}
+            onChangeText={setPassword}
+            style={styles.input}
+            autoCorrect={false}
+            autoCapitalize={"none"}
+            multilines
+          />
+          <TextInput
+            value={passwordConfirm}
+            placeholder={"password confirm"}
+            onChangeText={setPasswordConfirm}
+            style={styles.input}
+            autoCorrect={false}
+            autoCapitalize={"none"}
+            multilines
+          />
+          <View style={styles.buttonWrapper}>
+            <Button
+              style={styles.button}
+              onPress={pressHandllerr}
+              title={"Зарегистрироваться"}
+            />
+            <Button
+              style={styles.button}
+              onPress={() => navigation.navigate("Auth")}
+              title={"Назад"}
+            />
+          </View>
+        </View>
       </TouchableWithoutFeedback>
     </ScrollView>
   );
@@ -91,10 +100,9 @@ export const Registration = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   wrapper: {
-  padding:10,
-  flexDirection:'column',
-  marginTop:50
-  
+    padding: 10,
+    flexDirection: "column",
+    marginTop: 50,
   },
   input: {
     width: "100%",
@@ -108,10 +116,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    alignItems:'center',
-    color:'red'
+    alignItems: "center",
+    color: "red",
   },
-  button: {
-  
+  buttonWrapper: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 20,
+    marginVertical: 20,
+    padding: 20,
+  },
+  titleWrapper:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent:'space-around'
   },
 });

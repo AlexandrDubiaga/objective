@@ -1,11 +1,21 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View,Button } from "react-native";
 import { THEME } from "../theme";
-
-
+import { logout } from "../store/types";
+import { useDispatch, useSelector } from "react-redux";
 export const SettingsScreens = ({route, navigation}) => {
+  const dispatch = useDispatch();
   navigation.setOptions({
     title: "Settings",
+    headerRight: () => (
+      <Button 
+        onPress={() => {
+          dispatch(logout());
+          navigation.navigate("Auth");
+        }}
+        title="logout"
+      />
+    ),
     headerStyle: {
       backgroundColor: Platform.OS === "android" ? THEME.MAIN_COLOR : "#fff",
     },
@@ -13,6 +23,7 @@ export const SettingsScreens = ({route, navigation}) => {
     headerTitleStyle: {
       fontWeight: "bold",
     },
+    headerTitleAlign:'center'
   });
   return (
     <View style={styles.center}>
