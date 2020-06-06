@@ -9,6 +9,8 @@ import { THEME } from "../theme";
 import { Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Auth } from '../login/Auth';
+import { Registration } from '../login/Registration';
 
 const MainStack = createStackNavigator();
 export const MainScreenNavigator = () => {
@@ -116,7 +118,9 @@ const MainNavigator = createDrawerNavigator();
 export const MainNavScreens = () => {
   return (
     <NavigationContainer>
-      <MainNavigator.Navigator>
+      <MainNavigator.Navigator  initialRouteName="Auth">
+      <MainNavigator.Screen name="Auth" component={Auth} />
+      <MainNavigator.Screen name="Registration" component={Registration} />
         <MainNavigator.Screen name="Main" component={MyTabs} />
       </MainNavigator.Navigator>
     </NavigationContainer>

@@ -4,8 +4,16 @@ import { THEME } from "../theme";
 
 
 export const SettingsScreens = ({route, navigation}) => {
-
- 
+  navigation.setOptions({
+    title: "Settings",
+    headerStyle: {
+      backgroundColor: Platform.OS === "android" ? THEME.MAIN_COLOR : "#fff",
+    },
+    headerTintColor: Platform.OS === "android" ? "#fff" : THEME.MAIN_COLOR,
+    headerTitleStyle: {
+      fontWeight: "bold",
+    },
+  });
   return (
     <View style={styles.center}>
       <Text>Settings</Text>
