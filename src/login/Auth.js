@@ -10,6 +10,7 @@ import {
   Image,
   ScrollView,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { THEME } from "../theme";
 import { login, logout } from "../store/types";
@@ -17,23 +18,31 @@ import { color } from "react-native-reanimated";
 import { useDispatch, useSelector } from "react-redux";
 
 export const Auth = ({ route, navigation }) => {
-  const isLogined = useSelector((state) => {
-    return state.auth.isLogined;
+  const token = useSelector((state) => {
+    return state.auth.token;
   });
-  if (isLogined) {
+  const error = useSelector((state) => {
+    return state.auth.error;
+  });
+
+ 
+  if (token) {
     navigation.navigate("Main");
   }
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const pressHandllerr = () => {
+    let check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!email && !password) {
       Alert.alert("Поля не могут быть пустыми!");
     } else if (!password) {
       Alert.alert("Поле password может быть пустым!");
-    }else if(password.length<8){
+    } else if (password.length < 8) {
       Alert.alert("Длинна пароля не может быть меньше 8 символов");
-    } else {
+    } else if(!check.test(email)){
+      Alert.alert("Не валидный email");
+    }else {
       Keyboard.dismiss();
       const userData = {
         email: email,
@@ -46,7 +55,7 @@ export const Auth = ({ route, navigation }) => {
   };
 
   const registration = () => {
-    dispatch(logout());
+    //dispatch(logout());
     navigation.navigate("Registration");
   };
 
@@ -54,26 +63,31 @@ export const Auth = ({ route, navigation }) => {
     <ScrollView>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
         <View style={styles.wrapper}>
+          <View style={styles.errorWrapper}>
+            <Text style={styles.error}>{error}</Text>
+          </View>
           <View style={styles.titleWrapper}>
-          <Text style={styles.title}>Авторизируйся</Text>
+            <Text style={styles.title}>Авторизируйся</Text>
           </View>
           <TextInput
             value={email}
-            placeholder={"email"}
+            placeholder={"Email"}
             onChangeText={setEmail}
             style={styles.input}
             autoCorrect={false}
             autoCapitalize={"none"}
             multilines
+            
           />
           <TextInput
             value={password}
-            placeholder={"password"}
+            placeholder={"Password"}
             onChangeText={setPassword}
             style={styles.input}
             autoCorrect={false}
             autoCapitalize={"none"}
             multilines
+            secureTextEntry={true}
           />
           <View style={styles.buttonWrapper}>
             <View>
@@ -102,35 +116,45 @@ const styles = StyleSheet.create({
   wrapper: {
     padding: 10,
     flexDirection: "column",
-    marginTop: 50,
+    marginTop: 100,
+    backgroundColor:'#E6E6FA'
+  
   },
   input: {
     width: "100%",
-    borderStyle: "solid",
-    borderBottomWidth: 2,
     borderBottomColor: THEME.MAIN_COLOR,
     padding: 10,
     marginVertical: 20,
-  
+    backgroundColor:'#FFF8DC'
   },
 
   title: {
     fontSize: 20,
     fontWeight: "bold",
-   justifyContent:'space-around',
-    color: "red",
+    justifyContent: "space-around",
+    color: "#FF00FF",
   },
-  titleWrapper:{
-    flex:1,
-    flexDirection:'row',
-    justifyContent:'space-around'
+  titleWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   buttonWrapper: {
-    flexDirection:'row',
-    justifyContent:'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     marginTop: 20,
     marginVertical: 20,
-    padding:20,
-    
+    padding: 20,
+  },
+  error: {
+    fontSize: 20,
+    fontWeight: "bold",
+    justifyContent: "space-around",
+    color: "blue",
+  },
+  errorWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
 });

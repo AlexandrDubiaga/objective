@@ -14,24 +14,31 @@ import {
 import { THEME } from "../theme";
 import { registration } from "../store/types";
 import { useDispatch, useSelector } from "react-redux";
+import {  logout } from "../store/types";
 
 export const Registration = ({ route, navigation }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
-
+  const success = useSelector((state) => {
+    return state.auth.success;
+  });
+ 
   const pressHandllerr = () => {
+    let check = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!email && !passwordConfirm && !password) {
       Alert.alert("Поля не могут быть пустыми!");
     } else if (!email) {
-      Alert.alert("Поле email может быть пустым!");
+      Alert.alert("Поле email не может быть пустым!");
     } else if (!password) {
       Alert.alert("Поле password может быть пустым!");
     } else if (!passwordConfirm) {
-      Alert.alert("Поле passConf может быть пустым!");
+      Alert.alert("Поле passConf не может быть пустым!");
     } else if (password !== passwordConfirm) {
       Alert.alert("Пароли не совпадают!");
+    }else if(!check.test(email)){
+      Alert.alert("Не валидный email");
     } else {
       Keyboard.dismiss();
       const userData = {
@@ -45,17 +52,25 @@ export const Registration = ({ route, navigation }) => {
       dispatch(registration(userData));
     }
   };
+  
+  const goBack=()=>{
+    dispatch(logout());
+    navigation.navigate("Auth")
+  }
 
   return (
     <ScrollView>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
         <View style={styles.wrapper}>
+        <View style={styles.successWrapper}>
+            <Text style={styles.success}>{success}</Text>
+          </View>
           <View style={styles.titleWrapper}>
           <Text style={styles.title}>Регистрация</Text>
           </View>
           <TextInput
             value={email}
-            placeholder={"email"}
+            placeholder={"Email"}
             onChangeText={setEmail}
             style={styles.input}
             autoCorrect={false}
@@ -64,21 +79,23 @@ export const Registration = ({ route, navigation }) => {
           />
           <TextInput
             value={password}
-            placeholder={"password"}
+            placeholder={"Password"}
             onChangeText={setPassword}
             style={styles.input}
             autoCorrect={false}
             autoCapitalize={"none"}
             multilines
+            secureTextEntry={true}
           />
           <TextInput
             value={passwordConfirm}
-            placeholder={"password confirm"}
+            placeholder={"Password confirm"}
             onChangeText={setPasswordConfirm}
             style={styles.input}
             autoCorrect={false}
             autoCapitalize={"none"}
             multilines
+            secureTextEntry={true}
           />
           <View style={styles.buttonWrapper}>
             <Button
@@ -88,7 +105,7 @@ export const Registration = ({ route, navigation }) => {
             />
             <Button
               style={styles.button}
-              onPress={() => navigation.navigate("Auth")}
+              onPress={() => goBack() }
               title={"Назад"}
             />
           </View>
@@ -102,22 +119,28 @@ const styles = StyleSheet.create({
   wrapper: {
     padding: 10,
     flexDirection: "column",
-    marginTop: 50,
+    marginTop: 100,
+    backgroundColor:'#E6E6FA'
+  
   },
   input: {
     width: "100%",
-    borderStyle: "solid",
-    borderBottomWidth: 2,
     borderBottomColor: THEME.MAIN_COLOR,
     padding: 10,
     marginVertical: 20,
+    backgroundColor:'#FFF8DC'
   },
 
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    alignItems: "center",
-    color: "red",
+    justifyContent: "space-around",
+    color: "#FF00FF",
+  },
+  titleWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   buttonWrapper: {
     flexDirection: "row",
@@ -126,7 +149,14 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     padding: 20,
   },
-  titleWrapper:{
+ 
+  success: {
+    fontSize: 20,
+    fontWeight: "bold",
+    alignItems: "center",
+    color: "blue",
+  },
+  successWrapper:{
     flex:1,
     flexDirection:'row',
     justifyContent:'space-around'
